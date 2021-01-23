@@ -6,3 +6,7 @@ baeckjoon/b10809_알파벳_찾기.java
  baeckjoon.b10809_알파벳_찾기
 baeckjoon/b2675_문자열_반복.java
  baeckjoon.b2675_문자열_반복
+baeckjoon/baeckjoon_sample.java
+ baeckjoon.baeckjoon_sample
+baeckjoon/b1157_단어_공부.java
+ baeckjoon.b1157_단어_공부
