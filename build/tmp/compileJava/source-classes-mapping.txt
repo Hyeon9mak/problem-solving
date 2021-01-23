@@ -10,3 +10,5 @@ baeckjoon/baeckjoon_sample.java
  baeckjoon.baeckjoon_sample
 baeckjoon/b1157_단어_공부.java
  baeckjoon.b1157_단어_공부
+baeckjoon/b1152_단어의_개수.java
+ baeckjoon.b1152_단어의_개수
