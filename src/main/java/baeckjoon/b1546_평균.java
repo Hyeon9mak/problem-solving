@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class b1546_평균 {
 
-    private static final int ONE_HUNDRED = 100;
+    private static final int PERCENT = 100;
     private static final String SAPARATOR = " ";
 
     public static void main(String[] args) throws Exception {
@@ -22,7 +22,7 @@ public class b1546_평균 {
         double newExamTotalResult = 0;
         int maxExamResult = numberList.stream().max(Integer::compareTo).get();
         for (int i = 0; i < examCount; i++) {
-            newExamTotalResult += (double) numberList.get(i) / maxExamResult * ONE_HUNDRED;
+            newExamTotalResult += (double) numberList.get(i) / maxExamResult * PERCENT;
         }
 
         System.out.println(newExamTotalResult / examCount);
