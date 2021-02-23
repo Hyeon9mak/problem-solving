@@ -1,57 +1,64 @@
 package baekjoon;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class b1018_체스판_다시_칠하기 {
 
-    private static final Character BLACK_COLOR = 'B';
-    private static final Character WHITE_COLOR = 'W';
+    public static final int CHESS_BOARD_SIZE = 8;
+    public static final int MAXIMUM_REPAINT_COUNT = 64;
+    public static boolean[][] chessBoard;
+    public static int min = 64;
 
-    public static void main(String[] args) throws Exception {
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int M = Integer.parseInt(st.nextToken());
+
         int N = Integer.parseInt(st.nextToken());
-        String[] chessRow = new String[M];
+        int M = Integer.parseInt(st.nextToken());
 
-        int firstRePaintCount = 0;
-        int secondRePaintCount = 0;
-        for (int i = 0; i < M; i++) {
-            firstRePaintCount += getRePaintCount(N, BLACK_COLOR, br.readLine());
-            secondRePaintCount += getRePaintCount(N, WHITE_COLOR, br.readLine());
-        }
+        chessBoard = new boolean[N][M];
 
-        System.out.println(firstRePaintCount);
-        System.out.println(secondRePaintCount);
-        System.out.println(Math.min(firstRePaintCount, secondRePaintCount));
-    }
-
-    private static int getRePaintCount(int N, Character startColor, String chessRow) {
-        Character color = startColor;
-        int rePaintCount = 0;
-
-
-        if (N % 2 == 0) {
-            color = swapColor(color);
-        }
-
-        for (int j = 0; j < N; j++) {
-            if (color != chessRow.charAt(j)) {
-                rePaintCount += 1;
+        for (int i = 0; i < N; i++) {
+            String str = br.readLine();
+            for (int j = 0; j < M; j++) {
+                chessBoard[i][j] = str.charAt(j) == 'W';
             }
-            color = swapColor(color);
         }
 
-        return rePaintCount;
+        int moveN = N - 7;
+        int moveM = M - 7;
+
+        for (int i = 0; i < moveN; i++) {
+            for (int j = 0; j < moveM; j++) {
+                repaint(i, j);
+            }
+        }
+
+        System.out.println(min);
     }
 
-    private static Character swapColor(Character color) {
-        if (color == BLACK_COLOR) {
-            return WHITE_COLOR;
+
+    public static void repaint(int x, int y) {
+        int maxX = x + CHESS_BOARD_SIZE;
+        int maxY = y + CHESS_BOARD_SIZE;
+        int count = 0;
+        boolean color = chessBoard[x][y];
+
+        for (int i = x; i < maxX; i++) {
+            for (int j = y; j < maxY; j++) {
+                if (chessBoard[i][j] != color) {
+                    count++;
+                }
+                color = !color;
+            }
+            color = !color;
         }
-        return BLACK_COLOR;
+        count = Math.min(count, MAXIMUM_REPAINT_COUNT - count);
+        min = Math.min(min, count);
     }
 }
 
