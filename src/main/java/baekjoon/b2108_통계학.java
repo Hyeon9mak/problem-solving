@@ -3,16 +3,14 @@ package baekjoon;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class b2108_통계학 {
 
-    private static final String ENTER_LINE = "\n";
+    private static final String NEW_LINE = "\n";
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,79 +21,50 @@ public class b2108_통계학 {
             numbers.add(Integer.parseInt(br.readLine()));
         }
 
-        StringBuffer sb = new StringBuffer();
-        sb.append(getArithmeticMean(numbers));
-        sb.append(getMedian(numbers));
-        sb.append(getMostOftenAppear(numbers));
-        sb.append(getRange(numbers));
-
-        System.out.println(sb);
+        StringBuilder sb = new StringBuilder();
+        sb.append(getArithmeticMean(numbers))
+            .append(NEW_LINE)
+            .append(getMedian(numbers))
+            .append(NEW_LINE)
+            .append(getMode(numbers))
+            .append(NEW_LINE)
+            .append(getRange(numbers))
+            .append(NEW_LINE);
+        System.out.print(sb);
     }
 
-    private static String getArithmeticMean(final List<Integer> numbers) {
-        double totalSum = numbers.stream().reduce(0, Integer::sum);
-        double count = numbers.size();
-        return Math.round(totalSum / count) + ENTER_LINE;
+    private static long getArithmeticMean(final List<Integer> numbers) {
+        return Math.round(numbers.stream()
+            .mapToDouble(Integer::doubleValue)
+            .sum() / numbers.size());
     }
 
-    private static String getMedian(final List<Integer> numbers) {
-        Collections.sort(numbers);
-        return numbers.get(numbers.size() / 2) + ENTER_LINE;
+    private static int getMedian(final List<Integer> numbers) {
+        numbers.sort(Integer::compareTo);
+        return numbers.get(numbers.size() / 2);
     }
 
-    private static String getMostOftenAppear(final List<Integer> numbers) {
-        Map<Integer, Integer> numbersMap = getNumbersMap(numbers);
-        int maxCount = getMaxCount(numbers);
+    private static int getMode(List<Integer> numbers) {
+        Map<Integer, Long> numberMap = numbers.stream()
+            .collect(Collectors.groupingBy(number -> number, TreeMap::new, Collectors.counting()));
+        Long maxCount = numberMap.values().stream().max(Long::compareTo).get();
         List<Integer> maxCountNumbers = new ArrayList<>();
-
-        for (Entry<Integer, Integer> entry : numbersMap.entrySet()) {
-            if (entry.getValue().equals(maxCount)) {
-                maxCountNumbers.add(entry.getKey());
+        for (Integer key : numberMap.keySet()) {
+            if(maxCount.equals(numberMap.get(key))){
+                maxCountNumbers.add(key);
             }
         }
-
-        if (maxCountNumbers.size() == 1) {
-            return maxCountNumbers.get(0) + ENTER_LINE;
+        maxCountNumbers.sort(Integer::compareTo);
+        if(maxCountNumbers.size() == 1){
+            return maxCountNumbers.get(0);
         }
-        maxCountNumbers.sort(Comparator.reverseOrder());
-        return maxCountNumbers.get(1) + ENTER_LINE;
+        return maxCountNumbers.get(1);
     }
 
-    private static int getMaxCount(final List<Integer> numbers) {
-        int maxCount = 0;
-        int currentCount = 1;
-        int numbersCount = numbers.size();
-
-        for (int i = 1; i < numbersCount; i++) {
-            int prevNumber = numbers.get(i - 1);
-            int currentNumber = numbers.get(i);
-            if (prevNumber == currentNumber) {
-                currentCount += 1;
-            } else {
-                if (maxCount < currentCount) {
-                    maxCount = currentCount;
-                }
-                currentCount = 1;
-            }
-        }
-
-        return maxCount;
-    }
-
-    private static Map<Integer, Integer> getNumbersMap(final List<Integer> numbers) {
-        Map<Integer, Integer> numbersMap = new HashMap<>();
-        for (Integer number : numbers) {
-            if (numbersMap.containsKey(number)) {
-                numbersMap.put(number, numbersMap.get(number) + 1);
-            } else {
-                numbersMap.put(number, 1);
-            }
-        }
-        return numbersMap;
-    }
-
-    private static String getRange(final List<Integer> numbers) {
-        return numbers.get(numbers.size() - 1) - numbers.get(0) + ENTER_LINE;
+    private static int getRange(final List<Integer> numbers) {
+        int max = numbers.stream().max(Integer::compareTo).get();
+        int min = numbers.stream().min(Integer::compareTo).get();
+        return max - min;
     }
 }
 
@@ -133,6 +102,7 @@ N개의 수가 주어졌을 때, 네 가지 기본 통계값을 구하는 프로
 2
 1
 10
+
 예제 입력 2
 1
 4000
@@ -141,6 +111,7 @@ N개의 수가 주어졌을 때, 네 가지 기본 통계값을 구하는 프로
 4000
 4000
 0
+
 예제 입력 3
 5
 -1
